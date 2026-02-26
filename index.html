@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imobiliária Bairro Nobre</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="container header-content">
+      <a href="index.html" class="logo">Bairro <span>Nobre</span></a>
+      <nav>
+        <ul>
+          <li><a href="listing.html">Imóveis</a></li>
+          <li><a href="listing.html?type=rent">Aluguel</a></li>
+          <li><a href="listing.html?type=sale">Venda</a></li>
+          <li><a href="advertise.html">Anuncie</a></li>
+          <li><a href="about.html">Sobre</a></li>
+          <li><a href="contact.html">Contato</a></li>
+        </ul>
+      </nav>
+      <a href="https://wa.me/5511999999999" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Encontre o imóvel dos seus sonhos no seu bairro</h1>
+      <div class="search-box">
+        <select id="tipo">
+          <option value="">Comprar</option>
+          <option value="alugar">Alugar</option>
+        </select>
+        <select class="bairro-select" id="bairro">
+          <option value="">Todos os bairros</option>
+        </select>
+        <input type="number" placeholder="Preço mín." id="preco-min">
+        <input type="number" placeholder="Preço máx." id="preco-max">
+        <select id="quartos">
+          <option value="">Quartos</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+        </select>
+        <button class="btn-search" onclick="buscarHome()"><i class="fas fa-search"></i> Buscar</button>
+      </div>
+    </div>
+  </section>
+
+  <main class="container">
+    <h2 class="section-title">Imóveis em destaque</h2>
+    <div class="card-grid" id="featured-container"></div>
+
+    <h2 class="section-title">Bairros atendidos</h2>
+    <div class="bairro-grid" id="bairros-grid"></div>
+
+    <h2 class="section-title">Nossos serviços</h2>
+    <div class="servico-grid">
+      <div class="servico-item">
+        <i class="fas fa-home"></i>
+        <h3>Avaliação de imóvel</h3>
+        <p>Saiba o valor justo do seu imóvel.</p>
+      </div>
+      <div class="servico-item">
+        <i class="fas fa-handshake"></i>
+        <h3>Administração de aluguel</h3>
+        <p>Cuidamos de tudo para você.</p>
+      </div>
+      <div class="servico-item">
+        <i class="fas fa-bullhorn"></i>
+        <h3>Anuncie seu imóvel</h3>
+        <p>Alugue ou venda mais rápido.</p>
+      </div>
+      <div class="servico-item">
+        <i class="fas fa-calculator"></i>
+        <h3>Financiamento</h3>
+        <p>Simule e realize o sonho da casa própria.</p>
+      </div>
+    </div>
+
+    <h2 class="section-title">O que nossos clientes dizem</h2>
+    <div class="depoimento-grid">
+      <div class="depoimento-card">
+        <p>"Atendimento excelente, encontrei o apartamento perfeito!"</p>
+        <p class="autor">- Ana Silva</p>
+      </div>
+      <div class="depoimento-card">
+        <p>"Corretores atenciosos e muito conhecimento do bairro."</p>
+        <p class="autor">- Carlos Oliveira</p>
+      </div>
+      <div class="depoimento-card">
+        <p>"Consegui alugar meu imóvel em menos de uma semana."</p>
+        <p class="autor">- Mariana Souza</p>
+      </div>
+    </div>
+  </main>
+
+  <section class="cta">
+    <div class="container">
+      <h2>Quer vender ou alugar rápido?</h2>
+      <p>Fale com um especialista agora mesmo.</p>
+      <a href="https://wa.me/5511999999999" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Chamar no WhatsApp</a>
+    </div>
+  </section>
+
+   <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Institucional</h4>
+          <ul>
+            <li><a href="about.html"><i class="fas fa-chevron-right"></i> Sobre nós</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> CRECI: 12345-F</a></li>
+            <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Trabalhe conosco</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Política de privacidade</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Imóveis</h4>
+          <ul>
+            <li><a href="listing.html?type=sale"><i class="fas fa-chevron-right"></i> Comprar</a></li>
+            <li><a href="listing.html?type=rent"><i class="fas fa-chevron-right"></i> Alugar</a></li>
+            <li><a href="listing.html"><i class="fas fa-chevron-right"></i> Lançamentos</a></li>
+            <li><a href="advertise.html"><i class="fas fa-chevron-right"></i> Anuncie seu imóvel</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-contact">
+          <h4>Contato</h4>
+          <p><i class="fas fa-map-marker-alt"></i> Rua das Flores, 123 – Jardim Europa, São Paulo/SP</p>
+          <p><i class="fas fa-phone-alt"></i> (11) 3333-4444</p>
+          <p><i class="fab fa-whatsapp"></i> (11) 99999-9999</p>
+          <p><i class="far fa-clock"></i> Seg a sex: 9h às 18h | Sáb: 9h às 13h</p>
+          <p><i class="far fa-envelope"></i> contato@bairronobre.com.br</p>
+        </div>
+        <div class="footer-col">
+          <h4>Redes Sociais</h4>
+          <div class="social-links">
+            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+          </div>
+          <p style="margin-top: 1.5rem; color: rgba(255,255,255,0.6);">Siga-nos para novidades</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Imobiliária Bairro Nobre. Todos os direitos reservados. Desenvolvido com ❤️ pela equipe.</p>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+  <script src="app.js"></script>
+</body>
+</html>

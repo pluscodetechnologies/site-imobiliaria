@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anuncie seu imóvel | Bairro Nobre</title>
+  <!-- Fontes e ícones -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Variáveis de cor */
+    :root {
+      --primary: #1A3B5D;
+      --secondary: #F15A24;
+      --accent: #FF8A5C;
+      --background: #F8FAFC;
+      --text-primary: #1E293B;
+      --text-secondary: #64748B;
+      --white: #FFFFFF;
+      --gray-light: #E2E8F0;
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      --border-radius: 0.75rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Header */
+    header {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: var(--secondary);
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--secondary);
+    }
+
+    .btn-whatsapp {
+      background-color: var(--secondary);
+      color: var(--white);
+      padding: 0.6rem 1.2rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color 0.2s;
+    }
+
+    .btn-whatsapp:hover {
+      background-color: var(--accent);
+    }
+
+    /* Título da página */
+    .page-title {
+      font-size: 2.5rem;
+      color: var(--primary);
+      text-align: center;
+      margin: 2rem 0 1rem;
+    }
+
+    .page-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 3rem;
+      font-size: 1.1rem;
+    }
+
+    /* Grid principal */
+    .advertise-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      margin: 3rem 0;
+    }
+
+    /* Benefícios */
+    .benefits h2 {
+      color: var(--primary);
+      margin-bottom: 2rem;
+      font-size: 1.8rem;
+    }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .benefit-card {
+      background: var(--white);
+      padding: 1.8rem 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-light);
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-align: center;
+    }
+
+    .benefit-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .benefit-card i {
+      font-size: 2.2rem;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+
+    .benefit-card h3 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .benefit-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    /* Formulário */
+    .form-section {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--gray-light);
+    }
+
+    .form-section h2 {
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 1px solid var(--gray-light);
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(241, 90, 36, 0.1);
+    }
+
+    .btn {
+      background: var(--secondary);
+      color: var(--white);
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    .btn:hover {
+      background: var(--accent);
+    }
+
+    /* Selo de confiança */
+    .trust-badge {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: var(--background);
+      border-radius: var(--border-radius);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border: 1px solid var(--gray-light);
+    }
+
+    .trust-badge i {
+      font-size: 2rem;
+      color: var(--secondary);
+    }
+
+    .trust-badge p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .trust-badge strong {
+      color: var(--primary);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--primary);
+      color: var(--white);
+      padding: 3rem 0 2rem;
+      margin-top: 4rem;
+      border-top: 4px solid var(--secondary);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-col h4 {
+      font-size: 1.2rem;
+      margin-bottom: 1.2rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 40px;
+      height: 2px;
+      background: var(--secondary);
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li {
+      margin-bottom: 0.7rem;
+    }
+
+    .footer-col a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: var(--secondary);
+    }
+
+    .footer-contact p {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .social-links a {
+      background: rgba(255,255,255,0.1);
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .social-links a:hover {
+      background: var(--secondary);
+    }
+
+    .social-links i {
+      font-size: 1.2rem;
+      color: var(--white);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.6);
+    }
+
+    /* Botão flutuante WhatsApp */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #25d366;
+      color: var(--white);
+      width: 3.8rem;
+      height: 3.8rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      box-shadow: var(--shadow-lg);
+      z-index: 99;
+      transition: transform 0.2s;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .advertise-grid {
+        grid-template-columns: 1fr;
+      }
+      .header-content {
+        flex-direction: column;
+        text-align: center;
+      }
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <a href="index.html" class="logo">Bairro <span>Nobre</span></a>
+      <nav>
+        <ul>
+          <li><a href="listing.html">Imóveis</a></li>
+          <li><a href="listing.html?type=rent">Aluguel</a></li>
+          <li><a href="listing.html?type=sale">Venda</a></li>
+          <li><a href="advertise.html">Anuncie</a></li>
+          <li><a href="about.html">Sobre</a></li>
+          <li><a href="contact.html">Contato</a></li>
+        </ul>
+      </nav>
+      <a href="https://wa.me/5511999999999" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main class="container">
+    <h1 class="page-title">Anuncie seu imóvel</h1>
+    <p class="page-subtitle">Preencha o formulário e receba uma avaliação gratuita. Nossa equipe entra em contato em até 24h.</p>
+
+    <div class="advertise-grid">
+      <!-- Coluna de benefícios -->
+      <div class="benefits">
+        <h2>Por que anunciar conosco?</h2>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <i class="fas fa-camera"></i>
+            <h3>Fotos profissionais</h3>
+            <p>Registramos seu imóvel com equipamento de alta qualidade.</p>
+          </div>
+          <div class="benefit-card">
+            <i class="fas fa-chart-line"></i>
+            <h3>Divulgação ampla</h3>
+            <p>Redes sociais, portais e nosso site com alto tráfego.</p>
+          </div>
+          <div class="benefit-card">
+            <i class="fas fa-user-check"></i>
+            <h3>Triagem de inquilinos</h3>
+            <p>Análise de crédito e documentação para sua segurança.</p>
+          </div>
+          <div class="benefit-card">
+            <i class="fas fa-file-signature"></i>
+            <h3>Contrato e assessoria</h3>
+            <p>Suporte jurídico em todas as etapas.</p>
+          </div>
+          <div class="benefit-card">
+            <i class="fas fa-hand-holding-usd"></i>
+            <h3>Administração de aluguel</h3>
+            <p>Cuidamos da cobrança e repasses para você.</p>
+          </div>
+          <div class="benefit-card">
+            <i class="fas fa-tachometer-alt"></i>
+            <h3>Agilidade na venda</h3>
+            <p>Nosso histórico é de imóveis vendidos em até 3 meses.</p>
+          </div>
+        </div>
+
+        <!-- Selo de confiança -->
+        <div class="trust-badge">
+          <i class="fas fa-shield-alt"></i>
+          <div>
+            <p><strong>CRECI: 12345-F</strong> | Registro no Conselho Regional de Corretores de Imóveis</p>
+            <p>Protegemos seus dados e seguimos as melhores práticas do mercado.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulário -->
+      <div class="form-section">
+        <h2>Preencha os dados</h2>
+        <form id="advertise-form">
+          <div class="form-group">
+            <label>Nome completo</label>
+            <input type="text" id="nome" placeholder="Digite seu nome" required>
+          </div>
+          <div class="form-group">
+            <label>WhatsApp</label>
+            <input type="tel" id="whatsapp" placeholder="(11) 99999-9999" required>
+          </div>
+          <div class="form-group">
+            <label>Tipo do imóvel</label>
+            <select id="tipo-imovel">
+              <option value="Apartamento">Apartamento</option>
+              <option value="Casa">Casa</option>
+              <option value="Terreno">Terreno</option>
+              <option value="Comercial">Comercial</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Bairro</label>
+            <input type="text" id="bairro" placeholder="Ex: Jardim Europa" required>
+          </div>
+          <div class="form-group">
+            <label>Valor esperado (R$)</label>
+            <input type="number" id="valor" placeholder="500.000" required>
+          </div>
+          <div class="form-group">
+            <label>Mensagem (opcional)</label>
+            <textarea id="mensagem" rows="3" placeholder="Conte mais sobre o imóvel..."></textarea>
+          </div>
+          <button type="submit" class="btn"><i class="fab fa-whatsapp"></i> Enviar e receber avaliação gratuita</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Institucional</h4>
+          <ul>
+            <li><a href="about.html"><i class="fas fa-chevron-right"></i> Sobre nós</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> CRECI: 12345-F</a></li>
+            <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Trabalhe conosco</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Política de privacidade</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Imóveis</h4>
+          <ul>
+            <li><a href="listing.html?type=sale"><i class="fas fa-chevron-right"></i> Comprar</a></li>
+            <li><a href="listing.html?type=rent"><i class="fas fa-chevron-right"></i> Alugar</a></li>
+            <li><a href="listing.html"><i class="fas fa-chevron-right"></i> Lançamentos</a></li>
+            <li><a href="advertise.html"><i class="fas fa-chevron-right"></i> Anuncie seu imóvel</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-contact">
+          <h4>Contato</h4>
+          <p><i class="fas fa-map-marker-alt"></i> Rua das Flores, 123 – Jardim Europa, São Paulo/SP</p>
+          <p><i class="fas fa-phone-alt"></i> (11) 3333-4444</p>
+          <p><i class="fab fa-whatsapp"></i> (11) 99999-9999</p>
+          <p><i class="far fa-clock"></i> Seg a sex: 9h às 18h | Sáb: 9h às 13h</p>
+          <p><i class="far fa-envelope"></i> contato@bairronobre.com.br</p>
+        </div>
+        <div class="footer-col">
+          <h4>Redes Sociais</h4>
+          <div class="social-links">
+            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+          </div>
+          <p style="margin-top: 1.5rem; color: rgba(255,255,255,0.6);">Siga-nos para novidades</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Imobiliária Bairro Nobre. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botão flutuante WhatsApp -->
+  <a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+  <!-- Script para envio do formulário via WhatsApp -->
+  <script>
+    document.getElementById('advertise-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Captura dos valores
+      const nome = document.getElementById('nome').value;
+      const whatsapp = document.getElementById('whatsapp').value;
+      const tipo = document.getElementById('tipo-imovel').value;
+      const bairro = document.getElementById('bairro').value;
+      const valor = document.getElementById('valor').value;
+      const mensagem = document.getElementById('mensagem').value;
+
+      // Montagem da mensagem
+      const texto = `Olá, gostaria de anunciar meu imóvel:%0A
+Nome: ${nome}%0A
+WhatsApp: ${whatsapp}%0A
+Tipo: ${tipo}%0A
+Bairro: ${bairro}%0A
+Valor esperado: R$ ${valor}%0A
+Mensagem: ${mensagem || 'Não informada'}`;
+
+      // Número da imobiliária (substitua pelo real)
+      const numero = '5511999999999';
+      const url = `https://wa.me/${numero}?text=${encodeURIComponent(texto)}`;
+      window.open(url, '_blank');
+    });
+  </script>
+</body>
+</html>

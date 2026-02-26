@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do imóvel | Bairro Nobre</title>
+  <!-- Leaflet CSS e JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Fontes e ícones -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Variáveis de cor (mesmas do design anterior) */
+    :root {
+      --primary: #1A3B5D;
+      --secondary: #F15A24;
+      --accent: #FF8A5C;
+      --background: #F8FAFC;
+      --text-primary: #1E293B;
+      --text-secondary: #64748B;
+      --white: #FFFFFF;
+      --gray-light: #E2E8F0;
+      --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      --border-radius: 0.75rem;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Header */
+    header {
+      background-color: var(--primary);
+      color: var(--white);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+  z-index: 1000 !important;
+      box-shadow: var(--shadow-md);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .logo span {
+      color: var(--secondary);
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: var(--secondary);
+    }
+
+    .btn-whatsapp {
+      background-color: var(--secondary);
+      color: var(--white);
+      padding: 0.6rem 1.2rem;
+      border-radius: 9999px;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: background-color 0.2s;
+    }
+
+    .btn-whatsapp:hover {
+      background-color: var(--accent);
+    }
+
+    /* Título da página */
+    .property-title {
+      font-size: 2rem;
+      color: var(--primary);
+      margin: 2rem 0 1.5rem;
+    }
+
+    /* Galeria nova: imagem principal à direita, miniaturas à esquerda */
+    .gallery {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .thumb-column {
+      flex: 0 0 120px; /* Largura fixa para as miniaturas */
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .thumb-column img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.2s;
+      border: 2px solid transparent;
+    }
+
+    .thumb-column img:hover {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+
+    .thumb-column img.active {
+      border-color: var(--secondary);
+    }
+
+    .main-image-container {
+      flex: 1;
+    }
+
+    .main-image {
+      width: 100%;
+      height: 450px;
+      object-fit: cover;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Informações do imóvel */
+    .property-info {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2.5rem;
+      margin: 2rem 0;
+    }
+
+    .info-details {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      border: 1px solid var(--gray-light);
+    }
+
+    .price-box h2 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .text-secondary {
+      color: var(--text-secondary);
+    }
+
+    .neighborhood {
+      font-size: 1.1rem;
+      margin: 0.5rem 0;
+    }
+
+    .info-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 1.5rem 0;
+    }
+
+    .tag {
+      background: var(--secondary);
+      color: var(--white);
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .feature-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      margin: 2rem 0;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--gray-light);
+      border-bottom: 1px solid var(--gray-light);
+    }
+
+    .feature-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 80px;
+    }
+
+    .feature-item i {
+      font-size: 2rem;
+      color: var(--secondary);
+      margin-bottom: 0.3rem;
+    }
+
+    .feature-value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .feature-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    .description {
+      line-height: 1.8;
+      margin: 1rem 0;
+    }
+
+    .map-container {
+      height: 300px;
+      border-radius: var(--border-radius);
+      margin: 1.5rem 0;
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .contact-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.9rem 2rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: none;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--secondary);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--secondary);
+      color: var(--secondary);
+    }
+
+    .btn-outline:hover {
+      background: var(--secondary);
+      color: var(--white);
+    }
+
+    /* Imóveis similares */
+    .similar-properties h3 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .similar-properties .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    
+    .card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-light);
+    }
+
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 1rem;
+    }
+
+    .card-price {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .card-neighborhood {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin: 0.25rem 0;
+    }
+
+    .card .btn {
+      width: 100%;
+      text-align: center;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+    }
+
+    .card .btn:hover {
+      background: var(--secondary);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--primary);
+      color: var(--white);
+      padding: 3rem 0 2rem;
+      margin-top: 3rem;
+      border-top: 4px solid var(--secondary);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-col h4 {
+      font-size: 1.2rem;
+      margin-bottom: 1.2rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    .footer-col h4::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 40px;
+      height: 2px;
+      background: var(--secondary);
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col li {
+      margin-bottom: 0.7rem;
+    }
+
+    .footer-col a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: var(--secondary);
+    }
+
+    .footer-contact p {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .social-links a {
+      background: rgba(255,255,255,0.1);
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .social-links a:hover {
+      background: var(--secondary);
+    }
+
+    .social-links i {
+      font-size: 1.2rem;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.6);
+    }
+
+
+    .whatsapp-float {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #25d366;
+      color: var(--white);
+      width: 3.8rem;
+      height: 3.8rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      box-shadow: var(--shadow-lg);
+      z-index: 99;
+      transition: transform 0.2s;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+      .gallery {
+        flex-direction: column;
+      }
+      .thumb-column {
+        flex: 0 0 auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .thumb-column img {
+        width: 80px;
+        height: 80px;
+      }
+      .property-info {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .map-container,
+    #map {
+  z-index: 1;
+  position: relative; 
+}
+
+.modal-filters {
+  z-index: 2000; 
+}
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container header-content">
+      <a href="index.html" class="logo">Bairro <span>Nobre</span></a>
+      <nav>
+        <ul>
+          <li><a href="listing.html">Imóveis</a></li>
+          <li><a href="listing.html?type=rent">Aluguel</a></li>
+          <li><a href="listing.html?type=sale">Venda</a></li>
+          <li><a href="advertise.html">Anuncie</a></li>
+          <li><a href="about.html">Sobre</a></li>
+          <li><a href="contact.html">Contato</a></li>
+        </ul>
+      </nav>
+      <a href="https://wa.me/5511999999999" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    </div>
+  </header>
+
+  <main class="container" id="property-detail">
+    <!-- Título será preenchido via JS -->
+    <h1 id="property-title" class="property-title">Apartamento 2 quartos</h1>
+
+    <!-- Galeria reorganizada: miniaturas à esquerda, imagem principal à direita -->
+    <div class="gallery">
+      <div class="thumb-column" id="thumb-gallery">
+        <!-- Miniaturas serão inseridas aqui pelo JS -->
+      </div>
+      <div class="main-image-container">
+        <img id="main-image" class="main-image" src="" alt="Imagem principal">
+      </div>
+    </div>
+
+    <!-- Informações principais -->
+    <div class="property-info">
+      <div class="info-details">
+        <div class="price-box">
+          <h2 id="property-price">R$ 350.000</h2>
+          <p id="property-condo" class="text-secondary">Condomínio: R$ 600</p>
+          <p id="property-iptu" class="text-secondary">IPTU: R$ 200</p>
+        </div>
+
+        <p class="neighborhood"><i class="fas fa-map-pin" style="color: var(--secondary);"></i> <span id="property-neighborhood">Jardim América</span></p>
+
+        <div class="info-tags" id="property-tags">
+          <span class="tag">Varanda</span>
+          <span class="tag">Pet friendly</span>
+        </div>
+
+        <div class="feature-list">
+          <div class="feature-item" id="property-area">
+            <i class="fas fa-ruler-combined"></i>
+            <span class="feature-value">75</span>
+            <span class="feature-label">m²</span>
+          </div>
+          <div class="feature-item" id="property-bedrooms">
+            <i class="fas fa-bed"></i>
+            <span class="feature-value">2</span>
+            <span class="feature-label">quartos</span>
+          </div>
+          <div class="feature-item" id="property-bathrooms">
+            <i class="fas fa-bath"></i>
+            <span class="feature-value">2</span>
+            <span class="feature-label">banheiros</span>
+          </div>
+          <div class="feature-item" id="property-parking">
+            <i class="fas fa-car"></i>
+            <span class="feature-value">1</span>
+            <span class="feature-label">vagas</span>
+          </div>
+        </div>
+
+        <h3>Descrição</h3>
+        <p id="property-description" class="description">
+          Apartamento bem localizado, próximo a comércios e escolas. Sala ampla, cozinha planejada, varanda com churrasqueira. Ótimo estado de conservação.
+        </p>
+
+        <!-- Mapa -->
+        <h3>Localização</h3>
+        <div id="map" class="map-container"></div>
+
+        <!-- Botões de contato -->
+        <div class="contact-buttons">
+          <button class="btn btn-primary" id="agendar-visita"><i class="fab fa-whatsapp"></i> Agendar visita</button>
+          <button class="btn btn-outline" id="solicitar-info"><i class="fas fa-info-circle"></i> Solicitar informações</button>
+        </div>
+      </div>
+
+      <!-- Imóveis similares (sidebar) -->
+      <aside class="similar-properties">
+        <h3>Imóveis similares</h3>
+        <div class="card-grid" id="similares-container">
+          <!-- Cards serão inseridos via JS -->
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Institucional</h4>
+          <ul>
+            <li><a href="about.html"><i class="fas fa-chevron-right"></i> Sobre nós</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> CRECI: 12345-F</a></li>
+            <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Trabalhe conosco</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Política de privacidade</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Imóveis</h4>
+          <ul>
+            <li><a href="listing.html?type=sale"><i class="fas fa-chevron-right"></i> Comprar</a></li>
+            <li><a href="listing.html?type=rent"><i class="fas fa-chevron-right"></i> Alugar</a></li>
+            <li><a href="listing.html"><i class="fas fa-chevron-right"></i> Lançamentos</a></li>
+            <li><a href="advertise.html"><i class="fas fa-chevron-right"></i> Anuncie seu imóvel</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-contact">
+          <h4>Contato</h4>
+          <p><i class="fas fa-map-marker-alt"></i> Rua das Flores, 123 – Jardim Europa, São Paulo/SP</p>
+          <p><i class="fas fa-phone-alt"></i> (11) 3333-4444</p>
+          <p><i class="fab fa-whatsapp"></i> (11) 99999-9999</p>
+          <p><i class="far fa-clock"></i> Seg a sex: 9h às 18h | Sáb: 9h às 13h</p>
+          <p><i class="far fa-envelope"></i> contato@bairronobre.com.br</p>
+        </div>
+        <div class="footer-col">
+          <h4>Redes Sociais</h4>
+          <div class="social-links">
+            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+          </div>
+          <p style="margin-top: 1.5rem; color: rgba(255,255,255,0.6);">Siga-nos para novidades</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Imobiliária Bairro Nobre. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botão flutuante WhatsApp -->
+  <a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+  <!-- Script para popular dados mock e inicializar mapa -->
+  <script>
+    (function() {
+      // Dados mock do imóvel atual
+      const property = {
+        id: 1,
+        title: "Apartamento 2 quartos",
+        price: 350000,
+        condo: 600,
+        iptu: 200,
+        neighborhood: "Jardim América",
+        features: ["Varanda", "Pet friendly"],
+        area_m2: 75,
+        bedrooms: 2,
+        bathrooms: 2,
+        parking: 1,
+        description: "Apartamento bem localizado, próximo a comércios e escolas. Sala ampla, cozinha planejada, varanda com churrasqueira. Ótimo estado de conservação.",
+        images: [
+          "https://picsum.photos/id/1015/800/600",
+          "https://picsum.photos/id/1018/800/600",
+          "https://picsum.photos/id/1043/800/600",
+          "https://picsum.photos/id/106/800/600"
+        ]
+      };
+
+      // Preencher título (já está no HTML, mas vamos garantir)
+      document.getElementById('property-title').textContent = property.title;
+
+      // Preencher preço e detalhes
+      document.getElementById('property-price').innerHTML = `R$ ${property.price.toLocaleString('pt-BR')}`;
+      document.getElementById('property-condo').textContent = `Condomínio: R$ ${property.condo.toLocaleString('pt-BR')}`;
+      document.getElementById('property-iptu').textContent = `IPTU: R$ ${property.iptu.toLocaleString('pt-BR')}`;
+      document.getElementById('property-neighborhood').textContent = property.neighborhood;
+
+      // Tags
+      const tagsContainer = document.getElementById('property-tags');
+      tagsContainer.innerHTML = ''; // limpa os exemplos
+      property.features.forEach(f => {
+        const span = document.createElement('span');
+        span.className = 'tag';
+        span.textContent = f;
+        tagsContainer.appendChild(span);
+      });
+
+      // Feature values
+      document.querySelector('#property-area .feature-value').textContent = property.area_m2;
+      document.querySelector('#property-bedrooms .feature-value').textContent = property.bedrooms;
+      document.querySelector('#property-bathrooms .feature-value').textContent = property.bathrooms;
+      document.querySelector('#property-parking .feature-value').textContent = property.parking;
+
+      // Descrição
+      document.getElementById('property-description').textContent = property.description;
+
+      // Galeria
+      const thumbGallery = document.getElementById('thumb-gallery');
+      const mainImage = document.getElementById('main-image');
+      // Define a primeira imagem como principal
+      mainImage.src = property.images[0];
+      // Cria as miniaturas
+      property.images.forEach((imgSrc, index) => {
+        const thumb = document.createElement('img');
+        thumb.src = imgSrc;
+        thumb.alt = `Thumbnail ${index+1}`;
+        // Marca a primeira como ativa
+        if (index === 0) thumb.classList.add('active');
+        thumb.addEventListener('click', function() {
+          mainImage.src = imgSrc;
+          // Remove active de todas as miniaturas
+          document.querySelectorAll('.thumb-column img').forEach(img => img.classList.remove('active'));
+          this.classList.add('active');
+        });
+        thumbGallery.appendChild(thumb);
+      });
+
+      // Mapa com Leaflet (coordenadas fixas para teste)
+      const map = L.map('map').setView([-23.5505, -46.6333], 13); // Centro de SP
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+      L.marker([-23.5505, -46.6333]).addTo(map)
+        .bindPopup(property.neighborhood)
+        .openPopup();
+
+      // Botões WhatsApp
+      document.getElementById('agendar-visita').addEventListener('click', function() {
+        const msg = `Olá, gostaria de agendar uma visita para o imóvel: ${property.title} (R$ ${property.price}) - ${property.neighborhood}`;
+        window.open(`https://wa.me/5511999999999?text=${encodeURIComponent(msg)}`, '_blank');
+      });
+      document.getElementById('solicitar-info').addEventListener('click', function() {
+        const msg = `Olá, gostaria de mais informações sobre o imóvel: ${property.title}`;
+        window.open(`https://wa.me/5511999999999?text=${encodeURIComponent(msg)}`, '_blank');
+      });
+
+      // Imóveis similares (mock com 2 cards)
+      const similaresContainer = document.getElementById('similares-container');
+      const similares = [
+        { id: 2, title: "Cobertura duplex", price: 550000, neighborhood: "Centro", image: "https://picsum.photos/id/1043/300/200" },
+        { id: 3, title: "Casa com piscina", price: 890000, neighborhood: "Alphaville", image: "https://picsum.photos/id/1081/300/200" }
+      ];
+      similares.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${s.image}" alt="${s.title}">
+          <div class="card-content">
+            <div class="card-price">R$ ${s.price.toLocaleString('pt-BR')}</div>
+            <div class="card-neighborhood">${s.neighborhood}</div>
+            <a href="property.html?id=${s.id}" class="btn">Ver detalhes</a>
+          </div>
+        `;
+        similaresContainer.appendChild(card);
+      });
+    })();
+  </script>
+</body>
+</html>

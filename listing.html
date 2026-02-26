@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imóveis | Bairro Nobre</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Ajustes pontuais para esta página */
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .filter-header h3 {
+      margin: 0;
+      font-size: 1.3rem;
+    }
+    .clear-filters {
+      color: var(--secondary);
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: underline;
+      background: none;
+      border: none;
+    }
+    .filter-group .range-inputs {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .filter-group .range-inputs input {
+      width: 50%;
+    }
+    .filter-group .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .filter-group .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+    .badge-count {
+      background: var(--gray-light);
+      color: var(--text-secondary);
+      border-radius: 999px;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.75rem;
+      margin-left: 0.5rem;
+    }
+    .sort-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .sort-bar p {
+      margin: 0;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .sort-bar select {
+      padding: 0.6rem 2rem 0.6rem 1rem;
+      border-radius: 30px;
+      border: 1px solid var(--gray-light);
+      background: white;
+      font-size: 0.95rem;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231A3B5D' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.8rem center;
+      background-size: 1rem;
+    }
+    .load-more button {
+      background: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      padding: 0.8rem 2.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .load-more button:hover {
+      background: var(--primary);
+      color: white;
+    }
+    /* Cards */
+    .card-grid {
+      gap: 1.8rem;
+    }
+    .card {
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+    }
+    /* Modal mobile */
+    .modal-content {
+      border-radius: 20px;
+      padding: 1.8rem;
+    }
+    .modal-content h3 {
+      margin-top: 0;
+      color: var(--primary);
+    }
+    .modal-close {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+    @media (max-width: 768px) {
+      .sort-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .sort-bar select {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER COMPLETO -->
+  <header>
+    <div class="container header-content">
+      <a href="index.html" class="logo">Bairro <span>Nobre</span></a>
+      <nav>
+        <ul>
+          <li><a href="listing.html">Imóveis</a></li>
+          <li><a href="listing.html?type=rent">Aluguel</a></li>
+          <li><a href="listing.html?type=sale">Venda</a></li>
+          <li><a href="advertise.html">Anuncie</a></li>
+          <li><a href="about.html">Sobre</a></li>
+          <li><a href="contact.html">Contato</a></li>
+        </ul>
+      </nav>
+      <a href="https://wa.me/5511999999999" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Botão para filtros mobile -->
+    <button class="btn-filters-mobile" id="btn-filters-mobile">
+      <i class="fas fa-sliders-h"></i> Filtros
+      <span class="badge-count" id="active-filters-count">0</span>
+    </button>
+
+    <div class="listing-layout">
+      <!-- Sidebar de filtros (desktop) aprimorada -->
+      <aside class="filters-sidebar">
+        <div class="filter-header">
+          <h3><i class="fas fa-filter" style="margin-right: 0.5rem; color: var(--secondary);"></i> Filtros</h3>
+          <button class="clear-filters" id="clear-filters">Limpar todos</button>
+        </div>
+        <form id="filter-form">
+          <!-- Tipo -->
+          <div class="filter-group">
+            <label>Tipo de operação</label>
+            <select id="filter-tipo" class="filter-select">
+              <option value="">Todos</option>
+              <option value="sale">Comprar</option>
+              <option value="rent">Alugar</option>
+            </select>
+          </div>
+          <!-- Bairro -->
+          <div class="filter-group">
+            <label>Bairro</label>
+            <select id="filter-bairro" class="filter-select">
+              <option value="">Todos</option>
+            </select>
+          </div>
+          <!-- Preço (range) -->
+          <div class="filter-group">
+            <label>Preço (R$)</label>
+            <div class="range-inputs">
+              <input type="number" id="filter-preco-min" placeholder="Mín" min="0" step="1000">
+              <input type="number" id="filter-preco-max" placeholder="Máx" min="0" step="1000">
+            </div>
+          </div>
+          <!-- Quartos -->
+          <div class="filter-group">
+            <label>Quartos</label>
+            <select id="filter-quartos" class="filter-select">
+              <option value="">Qualquer</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+            </select>
+          </div>
+          <!-- Banheiros -->
+          <div class="filter-group">
+            <label>Banheiros</label>
+            <select id="filter-banheiros" class="filter-select">
+              <option value="">Qualquer</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+            </select>
+          </div>
+          <!-- Vagas -->
+          <div class="filter-group">
+            <label>Vagas</label>
+            <select id="filter-vagas" class="filter-select">
+              <option value="">Qualquer</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+            </select>
+          </div>
+          <!-- Área -->
+          <div class="filter-group">
+            <label>Área (m²)</label>
+            <div class="range-inputs">
+              <input type="number" id="filter-area-min" placeholder="Mín" min="0">
+              <input type="number" id="filter-area-max" placeholder="Máx" min="0">
+            </div>
+          </div>
+          <!-- Características (checkboxes) -->
+          <div class="filter-group">
+            <label>Características</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" id="filter-mobiliado"> <span>Mobiliado</span></label>
+              <label><input type="checkbox" id="filter-varanda"> <span>Varanda</span></label>
+              <label><input type="checkbox" id="filter-pet"> <span>Pet friendly</span></label>
+            </div>
+          </div>
+          <button type="submit" class="btn" style="width: 100%; justify-content: center;">
+            <i class="fas fa-search"></i> Aplicar filtros
+          </button>
+        </form>
+      </aside>
+
+      <!-- Lista de imóveis -->
+      <section>
+        <div class="sort-bar">
+          <p><i class="fas fa-home" style="color: var(--secondary); margin-right: 0.3rem;"></i> <span id="result-count">0</span> imóveis encontrados</p>
+          <select id="sort">
+            <option value="recent">Mais recentes</option>
+            <option value="price-asc">Menor preço</option>
+            <option value="price-desc">Maior preço</option>
+            <option value="area-desc">Maior área</option>
+          </select>
+        </div>
+        <div class="card-grid" id="listing-container">
+          <!-- Cards serão inseridos via JS -->
+        </div>
+        <div class="load-more" id="load-more">
+          <button><i class="fas fa-sync-alt" style="margin-right: 0.5rem;"></i> Carregar mais imóveis</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Modal de filtros mobile (aprimorado) -->
+  <div class="modal-filters" id="modal-filters">
+    <div class="modal-content">
+      <span class="modal-close" id="close-modal">&times;</span>
+      <h3><i class="fas fa-filter" style="color: var(--secondary); margin-right: 0.5rem;"></i> Filtros</h3>
+      <form id="filter-form-mobile">
+        <!-- Os campos serão clonados via JS ou podemos duplicar a estrutura -->
+        <!-- Por simplicidade, duplicamos a mesma estrutura do sidebar -->
+        <div class="filter-group">
+          <label>Tipo</label>
+          <select id="filter-tipo-mobile" class="filter-select">
+            <option value="">Todos</option>
+            <option value="sale">Comprar</option>
+            <option value="rent">Alugar</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Bairro</label>
+          <select id="filter-bairro-mobile" class="filter-select">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Preço (R$)</label>
+          <div class="range-inputs">
+            <input type="number" id="filter-preco-min-mobile" placeholder="Mín">
+            <input type="number" id="filter-preco-max-mobile" placeholder="Máx">
+          </div>
+        </div>
+        <div class="filter-group">
+          <label>Quartos</label>
+          <select id="filter-quartos-mobile" class="filter-select">
+            <option value="">Qualquer</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+            <option value="4">4+</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Banheiros</label>
+          <select id="filter-banheiros-mobile" class="filter-select">
+            <option value="">Qualquer</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Vagas</label>
+          <select id="filter-vagas-mobile" class="filter-select">
+            <option value="">Qualquer</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+          </select>
+        </div>
+        <div class="filter-group">
+          <label>Área (m²)</label>
+          <div class="range-inputs">
+            <input type="number" id="filter-area-min-mobile" placeholder="Mín">
+            <input type="number" id="filter-area-max-mobile" placeholder="Máx">
+          </div>
+        </div>
+        <div class="filter-group checkbox-group">
+          <label><input type="checkbox" id="filter-mobiliado-mobile"> Mobiliado</label>
+          <label><input type="checkbox" id="filter-varanda-mobile"> Varanda</label>
+          <label><input type="checkbox" id="filter-pet-mobile"> Pet friendly</label>
+        </div>
+        <div style="display: flex; gap: 0.8rem; margin-top: 1.5rem;">
+          <button type="submit" class="btn" style="flex: 1;"><i class="fas fa-check"></i> Aplicar</button>
+          <button type="button" class="btn btn-outline" id="clear-filters-mobile" style="flex: 1;">Limpar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FOOTER COMPLETO -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Institucional</h4>
+          <ul>
+            <li><a href="about.html"><i class="fas fa-chevron-right"></i> Sobre nós</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> CRECI: 12345-F</a></li>
+            <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Trabalhe conosco</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Política de privacidade</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Imóveis</h4>
+          <ul>
+            <li><a href="listing.html?type=sale"><i class="fas fa-chevron-right"></i> Comprar</a></li>
+            <li><a href="listing.html?type=rent"><i class="fas fa-chevron-right"></i> Alugar</a></li>
+            <li><a href="listing.html"><i class="fas fa-chevron-right"></i> Lançamentos</a></li>
+            <li><a href="advertise.html"><i class="fas fa-chevron-right"></i> Anuncie seu imóvel</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-contact">
+          <h4>Contato</h4>
+          <p><i class="fas fa-map-marker-alt"></i> Rua das Flores, 123 – Jardim Europa, São Paulo/SP</p>
+          <p><i class="fas fa-phone-alt"></i> (11) 3333-4444</p>
+          <p><i class="fab fa-whatsapp"></i> (11) 99999-9999</p>
+          <p><i class="far fa-clock"></i> Seg a sex: 9h às 18h | Sáb: 9h às 13h</p>
+          <p><i class="far fa-envelope"></i> contato@bairronobre.com.br</p>
+        </div>
+        <div class="footer-col">
+          <h4>Redes Sociais</h4>
+          <div class="social-links">
+            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+          </div>
+          <p style="margin-top: 1.5rem; color: rgba(255,255,255,0.6);">Siga-nos para novidades</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Imobiliária Bairro Nobre. Todos os direitos reservados. Desenvolvido com ❤️ pela equipe.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botão flutuante WhatsApp -->
+  <a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+  <script src="app.js"></script>
+  <script>
+    // Script adicional para contar filtros ativos (exemplo simples)
+    document.addEventListener('DOMContentLoaded', function() {
+      const filterInputs = document.querySelectorAll('#filter-form select, #filter-form input[type="number"], #filter-form input[type="checkbox"]');
+      const countSpan = document.getElementById('active-filters-count');
+      
+      function updateFilterCount() {
+        let active = 0;
+        filterInputs.forEach(input => {
+          if (input.type === 'checkbox') {
+            if (input.checked) active++;
+          } else if (input.value && input.value !== '') {
+            active++;
+          }
+        });
+        countSpan.textContent = active;
+      }
+
+      filterInputs.forEach(input => {
+        input.addEventListener('change', updateFilterCount);
+        input.addEventListener('input', updateFilterCount);
+      });
+
+      // Limpar filtros (exemplo básico)
+      document.getElementById('clear-filters').addEventListener('click', function() {
+        document.getElementById('filter-form').reset();
+        updateFilterCount();
+        // Também disparar submit para atualizar listagem (se necessário)
+        document.getElementById('filter-form').dispatchEvent(new Event('submit'));
+      });
+
+      // Mobile: abrir/fechar modal
+      const btnMobile = document.getElementById('btn-filters-mobile');
+      const modal = document.getElementById('modal-filters');
+      const closeModal = document.getElementById('close-modal');
+
+      btnMobile.addEventListener('click', () => {
+        modal.classList.add('active');
+      });
+
+      closeModal.addEventListener('click', () => {
+        modal.classList.remove('active');
+      });
+
+      window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+        }
+      });
+
+      // Inicializar contagem
+      updateFilterCount();
+    });
+  </script>
+</body>
+</html>

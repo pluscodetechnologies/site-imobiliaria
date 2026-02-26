@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre nós | Bairro Nobre</title>
+  <!-- Fontes e ícones -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Estilos globais (já existentes) -->
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Estilos adicionais específicos para a página sobre */
+    .about-hero {
+      background: linear-gradient(135deg, var(--primary) 0%, #0F2A44 100%);
+      color: var(--white);
+      padding: 3rem 0;
+      margin-bottom: 3rem;
+      border-radius: 0 0 var(--border-radius) var(--border-radius);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .about-text h2 {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .about-text p {
+      color: var(--text-primary);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .about-image img {
+      width: 100%;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Estatísticas */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      margin: 3rem 0;
+      text-align: center;
+    }
+
+    .stat-item {
+      background: var(--white);
+      padding: 2rem 1rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-light);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--secondary);
+      line-height: 1.2;
+    }
+
+    .stat-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* Equipe */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0 3rem;
+    }
+
+    .team-card {
+      background: var(--white);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.2s;
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    .team-card:hover {
+      transform: translateY(-6px);
+    }
+
+    .team-card img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 4px solid var(--secondary);
+    }
+
+    .team-card h3 {
+      color: var(--primary);
+      font-size: 1.3rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .team-card p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .team-social {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .team-social a {
+      color: var(--primary);
+      font-size: 1.2rem;
+      transition: color 0.2s;
+    }
+
+    .team-social a:hover {
+      color: var(--secondary);
+    }
+
+    /* Diferenciais */
+    .differentials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 2rem;
+      margin: 2rem 0 3rem;
+    }
+
+    .diff-card {
+      background: var(--white);
+      padding: 2rem 1.5rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-light);
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .diff-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--secondary);
+    }
+
+    .diff-card i {
+      font-size: 2.5rem;
+      color: var(--secondary);
+      margin-bottom: 1rem;
+    }
+
+    .diff-card h3 {
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .diff-card p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+      }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header (idêntico ao das outras páginas) -->
+  <header>
+    <div class="container header-content">
+      <a href="index.html" class="logo">Bairro <span>Nobre</span></a>
+      <nav>
+        <ul>
+          <li><a href="listing.html">Imóveis</a></li>
+          <li><a href="listing.html?type=rent">Aluguel</a></li>
+          <li><a href="listing.html?type=sale">Venda</a></li>
+          <li><a href="advertise.html">Anuncie</a></li>
+          <li><a href="about.html">Sobre</a></li>
+          <li><a href="contact.html">Contato</a></li>
+        </ul>
+      </nav>
+      <a href="https://wa.me/5511999999999" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main>
+    <!-- Hero da página sobre -->
+    <section class="about-hero">
+      <div class="container">
+        <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem;">Sobre a Bairro Nobre</h1>
+        <p style="font-size: 1.2rem; max-width: 700px;">Há mais de 15 anos transformando sonhos em endereços</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <!-- Grid com texto e imagem -->
+      <div class="about-grid">
+        <div class="about-text">
+          <h2>Nossa história</h2>
+          <p>A Imobiliária Bairro Nobre nasceu do sonho de oferecer um atendimento personalizado e conhecer cada cliente pelo nome. Desde 2009, atuamos no bairro e região com transparência, dedicação e um profundo conhecimento do mercado local.</p>
+          <p>Acreditamos que a confiança é a base de qualquer negócio. Por isso, trabalhamos lado a lado com nossos clientes, desde a primeira visita até a entrega das chaves. Nossa equipe é formada por profissionais que amam o que fazem e estão sempre prontos para ajudar.</p>
+          <p>Hoje, somos referência em gestão de aluguéis e vendas, com uma carteira de mais de 500 imóveis comercializados e uma taxa de satisfação de 98%.</p>
+        </div>
+        <div class="about-image">
+          <img src="https://picsum.photos/id/1043/800/600" alt="Escritório da imobiliária">
+        </div>
+      </div>
+
+      <!-- Estatísticas -->
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">15+</div>
+          <div class="stat-label">Anos de mercado</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">500+</div>
+          <div class="stat-label">Imóveis comercializados</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">98%</div>
+          <div class="stat-label">Clientes satisfeitos</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">10</div>
+          <div class="stat-label">Especialistas</div>
+        </div>
+      </div>
+
+      <!-- Nossa equipe -->
+      <h2 class="section-title" style="margin-top: 2rem;">Nossa equipe</h2>
+      <div class="team-grid">
+        <div class="team-card">
+          <img src="https://picsum.photos/id/1005/200/200" alt="João Mendes">
+          <h3>João Mendes</h3>
+          <p>Corretor líder</p>
+          <div class="team-social">
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="team-card">
+          <img src="https://picsum.photos/id/1027/200/200" alt="Maria Santos">
+          <h3>Maria Santos</h3>
+          <p>Especialista em aluguéis</p>
+          <div class="team-social">
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="team-card">
+          <img src="https://picsum.photos/id/107/200/200" alt="Carlos Lima">
+          <h3>Carlos Lima</h3>
+          <p>Consultor de vendas</p>
+          <div class="team-social">
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <div class="team-card">
+          <img src="https://picsum.photos/id/106/200/200" alt="Ana Paula">
+          <h3>Ana Paula</h3>
+          <p>Atendimento</p>
+          <div class="team-social">
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Diferenciais -->
+      <h2 class="section-title">Nossos diferenciais</h2>
+      <div class="differentials-grid">
+        <div class="diff-card">
+          <i class="fas fa-handshake"></i>
+          <h3>Atendimento local</h3>
+          <p>Conhecemos cada rua, cada detalhe do bairro. Isso faz toda a diferença na hora de encontrar o imóvel ideal.</p>
+        </div>
+        <div class="diff-card">
+          <i class="fas fa-bolt"></i>
+          <h3>Visitas rápidas</h3>
+          <p>Agendamento online e flexível. Sua visita em até 24h, sem burocracia.</p>
+        </div>
+        <div class="diff-card">
+          <i class="fas fa-star"></i>
+          <h3>Curadoria de imóveis</h3>
+          <p>Selecionamos apenas os melhores imóveis, com laudos e documentação em dia.</p>
+        </div>
+        <div class="diff-card">
+          <i class="fas fa-gavel"></i>
+          <h3>Suporte jurídico</h3>
+          <p>Contamos com assessoria jurídica especializada para garantir segurança em todo o processo.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer (idêntico ao das outras páginas) -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>Institucional</h4>
+          <ul>
+            <li><a href="about.html"><i class="fas fa-chevron-right"></i> Sobre nós</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> CRECI: 12345-F</a></li>
+            <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Trabalhe conosco</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> Política de privacidade</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Imóveis</h4>
+          <ul>
+            <li><a href="listing.html?type=sale"><i class="fas fa-chevron-right"></i> Comprar</a></li>
+            <li><a href="listing.html?type=rent"><i class="fas fa-chevron-right"></i> Alugar</a></li>
+            <li><a href="listing.html"><i class="fas fa-chevron-right"></i> Lançamentos</a></li>
+            <li><a href="advertise.html"><i class="fas fa-chevron-right"></i> Anuncie seu imóvel</a></li>
+          </ul>
+        </div>
+        <div class="footer-col footer-contact">
+          <h4>Contato</h4>
+          <p><i class="fas fa-map-marker-alt"></i> Rua das Flores, 123 – Jardim Europa, São Paulo/SP</p>
+          <p><i class="fas fa-phone-alt"></i> (11) 3333-4444</p>
+          <p><i class="fab fa-whatsapp"></i> (11) 99999-9999</p>
+          <p><i class="far fa-clock"></i> Seg a sex: 9h às 18h | Sáb: 9h às 13h</p>
+          <p><i class="far fa-envelope"></i> contato@bairronobre.com.br</p>
+        </div>
+        <div class="footer-col">
+          <h4>Redes Sociais</h4>
+          <div class="social-links">
+            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+          </div>
+          <p style="margin-top: 1.5rem; color: rgba(255,255,255,0.6);">Siga-nos para novidades</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Imobiliária Bairro Nobre. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Botão flutuante WhatsApp -->
+  <a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
+  <script src="app.js"></script>
+</body>
+</html>
