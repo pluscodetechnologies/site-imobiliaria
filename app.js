@@ -83,7 +83,27 @@ function openWhatsApp(phone, message) {
   window.open(url, '_blank');
 }
 
-// Botão flutuante WhatsApp (inserido em todas as páginas via HTML)
+// Função de busca da página inicial
+window.buscarHome = function() {
+  // Captura os valores dos filtros
+  const tipo = document.getElementById('tipo').value;
+  const bairro = document.getElementById('bairro').value;
+  const precoMin = document.getElementById('preco-min').value;
+  const precoMax = document.getElementById('preco-max').value;
+  const quartos = document.getElementById('quartos').value;
+
+  // Monta a URL com os parâmetros
+  const params = new URLSearchParams();
+  if (tipo) params.append('type', tipo);
+  if (bairro) params.append('bairro', bairro);
+  if (precoMin) params.append('precoMin', precoMin);
+  if (precoMax) params.append('precoMax', precoMax);
+  if (quartos) params.append('quartos', quartos);
+
+  // Redireciona para a página de listagem com os filtros
+  window.location.href = 'listing.html?' + params.toString();
+};
+
 // Inicialização comum
 document.addEventListener('DOMContentLoaded', async () => {
   await loadProperties();
@@ -106,12 +126,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Popula selects de bairro (listagem e home)
   populateNeighborhoods();
+
+  // Se houver parâmetros na URL (vindo da home), preenche os filtros da listagem
+  if (window.location.pathname.includes('listing.html')) {
+    fillFiltersFromURL();
+  }
 });
 
 function populateNeighborhoods() {
   const bairros = [...new Set(properties.map(p => p.neighborhood))];
-  const selects = document.querySelectorAll('.bairro-select');
+  const selects = document.querySelectorAll('.bairro-select, #filter-bairro, #filter-bairro-mobile');
   selects.forEach(select => {
+    // Limpa opções existentes (mantém a primeira "Todos")
+    const defaultOption = select.querySelector('option[value=""]');
+    select.innerHTML = '';
+    if (defaultOption) select.appendChild(defaultOption.cloneNode(true));
+    else {
+      const option = document.createElement('option');
+      option.value = '';
+      option.textContent = 'Todos os bairros';
+      select.appendChild(option);
+    }
     bairros.forEach(b => {
       const option = document.createElement('option');
       option.value = b;
@@ -123,6 +158,7 @@ function populateNeighborhoods() {
   // Bairros cards na home
   const bairroGrid = document.getElementById('bairros-grid');
   if (bairroGrid) {
+    bairroGrid.innerHTML = '';
     bairros.slice(0, 6).forEach(b => {
       const count = properties.filter(p => p.neighborhood === b).length;
       const card = document.createElement('div');
@@ -136,18 +172,72 @@ function populateNeighborhoods() {
   }
 }
 
+// Preenche os filtros da listagem com base na URL
+function fillFiltersFromURL() {
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // Mapeia os parâmetros da URL para os IDs dos campos no formulário desktop e mobile
+  const mappings = [
+    { param: 'type', desktop: 'filter-tipo', mobile: 'filter-tipo-mobile' },
+    { param: 'bairro', desktop: 'filter-bairro', mobile: 'filter-bairro-mobile' },
+    { param: 'precoMin', desktop: 'filter-preco-min', mobile: 'filter-preco-min-mobile' },
+    { param: 'precoMax', desktop: 'filter-preco-max', mobile: 'filter-preco-max-mobile' },
+    { param: 'quartos', desktop: 'filter-quartos', mobile: 'filter-quartos-mobile' },
+    { param: 'banheiros', desktop: 'filter-banheiros', mobile: 'filter-banheiros-mobile' },
+    { param: 'vagas', desktop: 'filter-vagas', mobile: 'filter-vagas-mobile' },
+    { param: 'areaMin', desktop: 'filter-area-min', mobile: 'filter-area-min-mobile' },
+    { param: 'areaMax', desktop: 'filter-area-max', mobile: 'filter-area-max-mobile' },
+    { param: 'mobiliado', desktop: 'filter-mobiliado', mobile: 'filter-mobiliado-mobile', isCheckbox: true },
+    { param: 'varanda', desktop: 'filter-varanda', mobile: 'filter-varanda-mobile', isCheckbox: true },
+    { param: 'pet', desktop: 'filter-pet', mobile: 'filter-pet-mobile', isCheckbox: true }
+  ];
+
+  mappings.forEach(m => {
+    const value = urlParams.get(m.param);
+    if (value !== null) {
+      // Preenche campo desktop
+      const desktopField = document.getElementById(m.desktop);
+      if (desktopField) {
+        if (m.isCheckbox) {
+          desktopField.checked = value === 'true' || value === 'on';
+        } else {
+          desktopField.value = value;
+        }
+      }
+      // Preenche campo mobile
+      const mobileField = document.getElementById(m.mobile);
+      if (mobileField) {
+        if (m.isCheckbox) {
+          mobileField.checked = value === 'true' || value === 'on';
+        } else {
+          mobileField.value = value;
+        }
+      }
+    }
+  });
+
+  // Após preencher, dispara o evento de submit para aplicar os filtros
+  const filterForm = document.getElementById('filter-form');
+  if (filterForm) {
+    filterForm.dispatchEvent(new Event('submit'));
+  }
+}
+
 // ---------- PÁGINA DE LISTAGEM ----------
 function initListingPage() {
   let filteredProperties = [...properties];
   const container = document.getElementById('listing-container');
   const sortSelect = document.getElementById('sort');
   const filterForm = document.getElementById('filter-form');
+  const filterFormMobile = document.getElementById('filter-form-mobile');
   const loadMoreBtn = document.getElementById('load-more');
+  const resultCountSpan = document.getElementById('result-count');
   const itemsPerPage = 6;
   let currentPage = 1;
 
+  // Função principal de filtragem e ordenação
   function applyFiltersAndSort() {
-    // Filtros
+    // Captura valores dos filtros (desktop, mas pode usar os mesmos IDs)
     const tipo = document.getElementById('filter-tipo')?.value;
     const bairro = document.getElementById('filter-bairro')?.value;
     const precoMin = parseFloat(document.getElementById('filter-preco-min')?.value) || 0;
@@ -188,6 +278,11 @@ function initListingPage() {
       filteredProperties.sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
+    // Atualiza contador
+    if (resultCountSpan) {
+      resultCountSpan.textContent = filteredProperties.length;
+    }
+
     currentPage = 1;
     renderPage();
   }
@@ -199,46 +294,142 @@ function initListingPage() {
     renderCards('listing-container', toShow);
 
     // Esconde botão se acabaram
-    if (end >= filteredProperties.length) {
-      loadMoreBtn.style.display = 'none';
-    } else {
-      loadMoreBtn.style.display = 'block';
+    if (loadMoreBtn) {
+      if (end >= filteredProperties.length) {
+        loadMoreBtn.style.display = 'none';
+      } else {
+        loadMoreBtn.style.display = 'block';
+      }
     }
   }
 
-  filterForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    applyFiltersAndSort();
-  });
+  // Event listener para o formulário desktop
+  if (filterForm) {
+    filterForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      applyFiltersAndSort();
+    });
+  }
 
-  sortSelect.addEventListener('change', applyFiltersAndSort);
+  // Event listener para o formulário mobile (se existir)
+  if (filterFormMobile) {
+    filterFormMobile.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Sincroniza os valores do mobile para os campos desktop antes de aplicar
+      syncMobileToDesktop();
+      applyFiltersAndSort();
+      // Fecha o modal
+      document.getElementById('modal-filters')?.classList.remove('active');
+    });
+  }
 
-  loadMoreBtn.addEventListener('click', () => {
-    currentPage++;
-    renderPage();
-  });
+  // Sincroniza os filtros mobile para os campos desktop
+  function syncMobileToDesktop() {
+    const mobileFields = {
+      'filter-tipo-mobile': 'filter-tipo',
+      'filter-bairro-mobile': 'filter-bairro',
+      'filter-preco-min-mobile': 'filter-preco-min',
+      'filter-preco-max-mobile': 'filter-preco-max',
+      'filter-quartos-mobile': 'filter-quartos',
+      'filter-banheiros-mobile': 'filter-banheiros',
+      'filter-vagas-mobile': 'filter-vagas',
+      'filter-area-min-mobile': 'filter-area-min',
+      'filter-area-max-mobile': 'filter-area-max',
+      'filter-mobiliado-mobile': 'filter-mobiliado',
+      'filter-varanda-mobile': 'filter-varanda',
+      'filter-pet-mobile': 'filter-pet'
+    };
 
-  // Filtro mobile
-  const btnMobile = document.getElementById('btn-filters-mobile');
-  const modal = document.getElementById('modal-filters');
-  const closeModal = document.getElementById('close-modal');
-
-  btnMobile.addEventListener('click', () => {
-    modal.classList.add('active');
-  });
-
-  closeModal.addEventListener('click', () => {
-    modal.classList.remove('active');
-  });
-
-  window.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.classList.remove('active');
+    for (let mobileId in mobileFields) {
+      const mobileEl = document.getElementById(mobileId);
+      const desktopEl = document.getElementById(mobileFields[mobileId]);
+      if (mobileEl && desktopEl) {
+        if (mobileEl.type === 'checkbox') {
+          desktopEl.checked = mobileEl.checked;
+        } else {
+          desktopEl.value = mobileEl.value;
+        }
+      }
     }
-  });
+  }
 
-  // Inicial
+  // Sincroniza desktop para mobile (quando os filtros são alterados no desktop)
+  function syncDesktopToMobile() {
+    const desktopFields = {
+      'filter-tipo': 'filter-tipo-mobile',
+      'filter-bairro': 'filter-bairro-mobile',
+      'filter-preco-min': 'filter-preco-min-mobile',
+      'filter-preco-max': 'filter-preco-max-mobile',
+      'filter-quartos': 'filter-quartos-mobile',
+      'filter-banheiros': 'filter-banheiros-mobile',
+      'filter-vagas': 'filter-vagas-mobile',
+      'filter-area-min': 'filter-area-min-mobile',
+      'filter-area-max': 'filter-area-max-mobile',
+      'filter-mobiliado': 'filter-mobiliado-mobile',
+      'filter-varanda': 'filter-varanda-mobile',
+      'filter-pet': 'filter-pet-mobile'
+    };
+
+    for (let desktopId in desktopFields) {
+      const desktopEl = document.getElementById(desktopId);
+      const mobileEl = document.getElementById(desktopFields[desktopId]);
+      if (desktopEl && mobileEl) {
+        if (desktopEl.type === 'checkbox') {
+          mobileEl.checked = desktopEl.checked;
+        } else {
+          mobileEl.value = desktopEl.value;
+        }
+      }
+    }
+  }
+
+  // Quando o sort mudar, reaplica
+  if (sortSelect) {
+    sortSelect.addEventListener('change', applyFiltersAndSort);
+  }
+
+  // Botão "Carregar mais"
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', () => {
+      currentPage++;
+      renderPage();
+    });
+  }
+
+  // Botão "Limpar todos" (desktop)
+  const clearFiltersBtn = document.getElementById('clear-filters');
+  if (clearFiltersBtn) {
+    clearFiltersBtn.addEventListener('click', () => {
+      document.getElementById('filter-form').reset();
+      syncDesktopToMobile(); // opcional
+      applyFiltersAndSort();
+    });
+  }
+
+  // Botão "Limpar" no mobile
+  const clearMobileBtn = document.getElementById('clear-filters-mobile');
+  if (clearMobileBtn) {
+    clearMobileBtn.addEventListener('click', () => {
+      document.getElementById('filter-form-mobile').reset();
+      // Também limpa os campos desktop após sincronizar? Melhor sincronizar e aplicar
+      syncMobileToDesktop();
+      applyFiltersAndSort();
+      document.getElementById('modal-filters')?.classList.remove('active');
+    });
+  }
+
+  // Inicializa com os filtros atuais
   applyFiltersAndSort();
+
+  // Sincroniza desktop -> mobile inicialmente
+  syncDesktopToMobile();
+
+  // Sempre que um filtro desktop mudar, sincronizar com mobile
+  const desktopInputs = document.querySelectorAll('#filter-form select, #filter-form input');
+  desktopInputs.forEach(input => {
+    input.addEventListener('change', syncDesktopToMobile);
+    input.addEventListener('input', syncDesktopToMobile);
+  });
 }
 
 // ---------- PÁGINA DE DETALHES ----------
@@ -268,6 +459,7 @@ function initPropertyPage() {
 
   // Tags
   const tagsContainer = document.getElementById('property-tags');
+  tagsContainer.innerHTML = '';
   property.features.forEach(f => {
     const span = document.createElement('span');
     span.className = 'tag';
@@ -278,6 +470,7 @@ function initPropertyPage() {
   // Galeria
   const mainImage = document.getElementById('main-image');
   const thumbContainer = document.getElementById('thumb-gallery');
+  thumbContainer.innerHTML = '';
   mainImage.src = property.images[0];
   property.images.forEach((img, index) => {
     const thumb = document.createElement('img');
@@ -288,21 +481,25 @@ function initPropertyPage() {
     thumbContainer.appendChild(thumb);
   });
 
-  // Mapa placeholder
+  // Mapa placeholder (substitua pela chave correta se necessário)
   document.getElementById('map-placeholder').innerHTML = '<iframe width="100%" height="300" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAkmvI9DazzG9p77IShsz_Di7-5Qn7zkcg&q=brasil" allowfullscreen></iframe>';
 
   // Botões WhatsApp
   const visitBtn = document.getElementById('agendar-visita');
-  visitBtn.addEventListener('click', () => {
-    const msg = `Olá, gostaria de agendar uma visita para o imóvel: ${property.title} (${formatPrice(property.price)}) - ${property.neighborhood}`;
-    openWhatsApp('5511999999999', msg); // telefone fictício
-  });
+  if (visitBtn) {
+    visitBtn.addEventListener('click', () => {
+      const msg = `Olá, gostaria de agendar uma visita para o imóvel: ${property.title} (${formatPrice(property.price)}) - ${property.neighborhood}`;
+      openWhatsApp('5511999999999', msg); // telefone fictício
+    });
+  }
 
   const infoBtn = document.getElementById('solicitar-info');
-  infoBtn.addEventListener('click', () => {
-    const msg = `Olá, gostaria de mais informações sobre o imóvel: ${property.title}`;
-    openWhatsApp('5511999999999', msg);
-  });
+  if (infoBtn) {
+    infoBtn.addEventListener('click', () => {
+      const msg = `Olá, gostaria de mais informações sobre o imóvel: ${property.title}`;
+      openWhatsApp('5511999999999', msg);
+    });
+  }
 
   // Imóveis similares (mesmo bairro, excluindo ele mesmo)
   const similares = properties.filter(p => p.neighborhood === property.neighborhood && p.id !== property.id).slice(0, 3);
@@ -342,5 +539,3 @@ if (document.getElementById('contact-form')) {
     openWhatsApp('5511999999999', texto);
   });
 }
-
-
