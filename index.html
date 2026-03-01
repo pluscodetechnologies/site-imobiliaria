@@ -1,133 +1,659 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Imobiliária Bairro Nobre</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="shortcut icon" href="/assets/casa.png" type="image/x-icon">
 </head>
 <body>
-  <header>
-    <div class="container header-content">
-      <a href="index.html" class="logo">Bairro <span>Nobre</span></a>
+  <header id="site-header">
+    <div class="header-content">
+      <a href="#/home" class="logo">Bairro <span>Nobre</span></a>
       <nav>
         <ul>
-          <li><a href="listing.html">Imóveis</a></li>
-          <li><a href="listing.html?type=rent">Aluguel</a></li>
-          <li><a href="listing.html?type=sale">Venda</a></li>
-          <li><a href="advertise.html">Anuncie</a></li>
-          <li><a href="about.html">Sobre</a></li>
-          <li><a href="contact.html">Contato</a></li>
+          <li><a href="#/listing">Imóveis</a></li>
+          <li><a href="#/listing?type=rent">Aluguel</a></li>
+          <li><a href="#/listing?type=sale">Venda</a></li>
+          <li><a href="#/advertise">Anuncie</a></li>
+          <li><a href="#/about">Sobre</a></li>
+          <li><a href="#/contact">Contato</a></li>
         </ul>
       </nav>
-      <a href="https://wa.me/5511999999999" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+      <a href="https://wa.me/5511999999999" class="btn-whatsapp" target="_blank" rel="noreferrer">
+        <i class="fab fa-whatsapp"></i> WhatsApp
+      </a>
     </div>
   </header>
-
-  <section class="hero">
-    <div class="container">
-      <h1>Encontre o imóvel dos seus sonhos no seu bairro</h1>
-      <div class="search-box">
-        <select id="tipo">
-          <option value="">Comprar</option>
-          <option value="alugar">Alugar</option>
-        </select>
-        <select class="bairro-select" id="bairro">
-          <option value="">Todos os bairros</option>
-        </select>
-        <input type="number" placeholder="Preço mín." id="preco-min">
-        <input type="number" placeholder="Preço máx." id="preco-max">
-        <select id="quartos">
-          <option value="">Quartos</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-          <option value="4">4+</option>
-        </select>
-        <button class="btn-search" onclick="buscarHome()"><i class="fas fa-search"></i> Buscar</button>
+  <main id="app">
+    <section class="view" id="view-home">
+      <section class="hero">
+        <div class="container">
+          <div class="hero-label">
+            <i class="fas fa-shield-alt"></i> Sua imobiliária de confiança há 15 anos
+          </div>
+          <h1>Encontre o imóvel <em>ideal</em> no seu bairro</h1>
+          <p class="hero-subtitle">Mais de 500 imóveis comercializados. Atendimento especializado, sem complicação.</p>
+          <div class="search-box">
+            <select id="tipo" class="bairro-select">
+              <option value="">Comprar</option>
+              <option value="rent">Alugar</option>
+            </select>
+            <select class="bairro-select" id="bairro">
+              <option value="">Todos os bairros</option>
+            </select>
+            <input type="number" placeholder="Preço mín." id="preco-min" />
+            <input type="number" placeholder="Preço máx." id="preco-max" />
+            <select id="quartos">
+              <option value="">Quartos</option>
+              <option value="1">1+</option>
+              <option value="2">2+</option>
+              <option value="3">3+</option>
+              <option value="4">4+</option>
+            </select>
+            <button class="btn-search" onclick="buscarHome()">
+              <i class="fas fa-search"></i> Buscar imóvel
+            </button>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <strong>500+</strong>
+              <span>Imóveis vendidos</span>
+            </div>
+            <div class="hero-stat">
+              <strong>98%</strong>
+              <span>Satisfação</span>
+            </div>
+            <div class="hero-stat">
+              <strong>15+</strong>
+              <span>Anos de mercado</span>
+            </div>
+            <div class="hero-stat">
+              <strong>10</strong>
+              <span>Especialistas</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="container">
+        <h2 class="section-title">Imóveis em destaque</h2>
+        <p class="section-subtitle">Selecionados pela nossa equipe com documentação em dia</p>
+        <div class="card-grid" id="featured-container"></div>
+        <h2 class="section-title">Bairros atendidos</h2>
+        <p class="section-subtitle">Especialistas no mercado local de cada região</p>
+        <div class="bairro-grid" id="bairros-grid"></div>
+        <h2 class="section-title">Nossos serviços</h2>
+        <p class="section-subtitle">Cuidamos de tudo, do anúncio às chaves</p>
+        <div class="servico-grid">
+          <div class="servico-item">
+            <i class="fas fa-home"></i>
+            <h3>Avaliação de imóvel</h3>
+            <p>Saiba o valor justo do seu imóvel com nossa análise de mercado.</p>
+          </div>
+          <div class="servico-item">
+            <i class="fas fa-handshake"></i>
+            <h3>Administração de aluguel</h3>
+            <p>Cuidamos da cobrança, repasses e manutenção para você.</p>
+          </div>
+          <div class="servico-item">
+            <i class="fas fa-bullhorn"></i>
+            <h3>Anuncie seu imóvel</h3>
+            <p>Divulgação ampla em portais e redes sociais.</p>
+          </div>
+          <div class="servico-item">
+            <i class="fas fa-calculator"></i>
+            <h3>Financiamento</h3>
+            <p>Simule e realize o sonho da casa própria com as melhores taxas.</p>
+          </div>
+        </div>
+        <h2 class="section-title">O que nossos clientes dizem</h2>
+        <p class="section-subtitle">Histórias reais de quem encontrou o lar ideal</p>
+        <div class="depoimento-grid">
+          <div class="depoimento-card">
+            <div class="depoimento-stars">★★★★★</div>
+            <p>"Atendimento excelente, encontrei o apartamento perfeito em tempo recorde!"</p>
+            <p class="autor">Ana Silva</p>
+          </div>
+          <div class="depoimento-card">
+            <div class="depoimento-stars">★★★★★</div>
+            <p>"Corretores atenciosos e com profundo conhecimento do bairro. Recomendo!"</p>
+            <p class="autor">Carlos Oliveira</p>
+          </div>
+          <div class="depoimento-card">
+            <div class="depoimento-stars">★★★★★</div>
+            <p>"Consegui alugar meu imóvel em menos de uma semana. Resultado incrível."</p>
+            <p class="autor">Mariana Souza</p>
+          </div>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <main class="container">
-    <h2 class="section-title">Imóveis em destaque</h2>
-    <div class="card-grid" id="featured-container"></div>
-
-    <h2 class="section-title">Bairros atendidos</h2>
-    <div class="bairro-grid" id="bairros-grid"></div>
-
-    <h2 class="section-title">Nossos serviços</h2>
-    <div class="servico-grid">
-      <div class="servico-item">
-        <i class="fas fa-home"></i>
-        <h3>Avaliação de imóvel</h3>
-        <p>Saiba o valor justo do seu imóvel.</p>
+      <section class="cta">
+        <div class="container">
+          <h2>Quer vender ou alugar rápido?</h2>
+          <p>Fale agora com um especialista. Resposta em até 1 hora.</p>
+          <a href="https://wa.me/5511999999999" class="btn-whatsapp" target="_blank" rel="noreferrer">
+            <i class="fab fa-whatsapp"></i> Chamar no WhatsApp
+          </a>
+        </div>
+      </section>
+    </section>
+    <section class="view" id="view-listing">
+      <div class="container listing-page">
+        <button class="btn-filters-mobile" id="btn-filters-mobile">
+          <i class="fas fa-sliders-h"></i> Filtros
+          <span class="badge-count" id="active-filters-count">0</span>
+        </button>
+        <div class="listing-layout">
+          <aside class="filters-sidebar">
+            <div class="filter-header">
+              <h3><i class="fas fa-filter"></i> Filtros</h3>
+              <button class="clear-filters" id="clear-filters" type="button">Limpar todos</button>
+            </div>
+            <form id="filter-form">
+              <div class="filter-group">
+                <label>Operação</label>
+                <select id="filter-tipo" class="filter-select">
+                  <option value="">Todos</option>
+                  <option value="sale">Comprar</option>
+                  <option value="rent">Alugar</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>Bairro</label>
+                <select id="filter-bairro" class="filter-select">
+                  <option value="">Todos</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>Preço (R$)</label>
+                <div class="range-inputs">
+                  <input type="number" id="filter-preco-min" placeholder="Mín" min="0" step="1000" />
+                  <input type="number" id="filter-preco-max" placeholder="Máx" min="0" step="1000" />
+                </div>
+              </div>
+              <div class="filter-group">
+                <label>Quartos</label>
+                <select id="filter-quartos" class="filter-select">
+                  <option value="">Qualquer</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                  <option value="4">4+</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>Banheiros</label>
+                <select id="filter-banheiros" class="filter-select">
+                  <option value="">Qualquer</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>Vagas</label>
+                <select id="filter-vagas" class="filter-select">
+                  <option value="">Qualquer</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                </select>
+              </div>
+              <div class="filter-group">
+                <label>Área (m²)</label>
+                <div class="range-inputs">
+                  <input type="number" id="filter-area-min" placeholder="Mín" min="0" />
+                  <input type="number" id="filter-area-max" placeholder="Máx" min="0" />
+                </div>
+              </div>
+              <div class="filter-group">
+                <label>Características</label>
+                <div class="checkbox-group">
+                  <label><input type="checkbox" id="filter-mobiliado" /> <span>Mobiliado</span></label>
+                  <label><input type="checkbox" id="filter-varanda" /> <span>Varanda</span></label>
+                  <label><input type="checkbox" id="filter-pet" /> <span>Pet friendly</span></label>
+                </div>
+              </div>
+              <button type="submit" class="btn" style="width:100%;justify-content:center;">
+                <i class="fas fa-search"></i> Aplicar filtros
+              </button>
+            </form>
+          </aside>
+          <section>
+            <div class="sort-bar">
+              <p><i class="fas fa-home"></i> <span id="result-count">0</span> imóveis encontrados</p>
+              <select id="sort">
+                <option value="recent">Mais recentes</option>
+                <option value="price-asc">Menor preço</option>
+                <option value="price-desc">Maior preço</option>
+                <option value="area-desc">Maior área</option>
+              </select>
+            </div>
+            <div class="card-grid" id="listing-container"></div>
+            <div class="load-more" id="load-more">
+              <button type="button"><i class="fas fa-sync-alt" style="margin-right:0.5rem;"></i> Carregar mais imóveis</button>
+            </div>
+          </section>
+        </div>
       </div>
-      <div class="servico-item">
-        <i class="fas fa-handshake"></i>
-        <h3>Administração de aluguel</h3>
-        <p>Cuidamos de tudo para você.</p>
+      <div class="modal-filters" id="modal-filters">
+        <div class="modal-content">
+          <span class="modal-close" id="close-modal">&times;</span>
+          <h3><i class="fas fa-filter"></i> Filtros</h3>
+          <form id="filter-form-mobile">
+            <div class="filter-group">
+              <label>Tipo</label>
+              <select id="filter-tipo-mobile" class="filter-select">
+                <option value="">Todos</option>
+                <option value="sale">Comprar</option>
+                <option value="rent">Alugar</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Bairro</label>
+              <select id="filter-bairro-mobile" class="filter-select">
+                <option value="">Todos</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Preço (R$)</label>
+              <div class="range-inputs">
+                <input type="number" id="filter-preco-min-mobile" placeholder="Mín" />
+                <input type="number" id="filter-preco-max-mobile" placeholder="Máx" />
+              </div>
+            </div>
+            <div class="filter-group">
+              <label>Quartos</label>
+              <select id="filter-quartos-mobile" class="filter-select">
+                <option value="">Qualquer</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+                <option value="4">4+</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Banheiros</label>
+              <select id="filter-banheiros-mobile" class="filter-select">
+                <option value="">Qualquer</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Vagas</label>
+              <select id="filter-vagas-mobile" class="filter-select">
+                <option value="">Qualquer</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Área (m²)</label>
+              <div class="range-inputs">
+                <input type="number" id="filter-area-min-mobile" placeholder="Mín" />
+                <input type="number" id="filter-area-max-mobile" placeholder="Máx" />
+              </div>
+            </div>
+            <div class="filter-group checkbox-group">
+              <label><input type="checkbox" id="filter-mobiliado-mobile" /> Mobiliado</label>
+              <label><input type="checkbox" id="filter-varanda-mobile" /> Varanda</label>
+              <label><input type="checkbox" id="filter-pet-mobile" /> Pet friendly</label>
+            </div>
+            <div class="filters-mobile-actions">
+              <button type="submit" class="btn" style="flex:1;"><i class="fas fa-check"></i> Aplicar</button>
+              <button type="button" class="btn btn-outline" id="clear-filters-mobile" style="flex:1;">Limpar</button>
+            </div>
+          </form>
+        </div>
       </div>
-      <div class="servico-item">
-        <i class="fas fa-bullhorn"></i>
-        <h3>Anuncie seu imóvel</h3>
-        <p>Alugue ou venda mais rápido.</p>
+    </section>
+    <section class="view" id="view-property">
+      <div class="container" id="property-detail">
+        <h1 id="property-title" class="property-title">Detalhes do imóvel</h1>
+        <div class="gallery">
+          <div class="thumb-column" id="thumb-gallery"></div>
+          <div class="main-image-container">
+            <img id="main-image" class="main-image" src="" alt="Imagem principal" />
+          </div>
+        </div>
+        <div class="property-info">
+          <div class="info-details">
+            <div class="price-box">
+              <h2 id="property-price">R$ 0</h2>
+              <p id="property-condo" class="text-secondary"></p>
+              <p id="property-iptu" class="text-secondary"></p>
+            </div>
+            <p class="neighborhood">
+              <i class="fas fa-map-pin"></i>
+              <span id="property-neighborhood"></span>
+            </p>
+            <div class="info-tags" id="property-tags"></div>
+            <div class="feature-list">
+              <div class="feature-item" id="property-area">
+                <i class="fas fa-ruler-combined"></i>
+                <span class="feature-value">0</span>
+                <span class="feature-label">m²</span>
+              </div>
+              <div class="feature-item" id="property-bedrooms">
+                <i class="fas fa-bed"></i>
+                <span class="feature-value">0</span>
+                <span class="feature-label">quartos</span>
+              </div>
+              <div class="feature-item" id="property-bathrooms">
+                <i class="fas fa-bath"></i>
+                <span class="feature-value">0</span>
+                <span class="feature-label">banheiros</span>
+              </div>
+              <div class="feature-item" id="property-parking">
+                <i class="fas fa-car"></i>
+                <span class="feature-value">0</span>
+                <span class="feature-label">vagas</span>
+              </div>
+            </div>
+            <h3>Descrição</h3>
+            <p id="property-description" class="description"></p>
+            <h3>Localização</h3>
+            <div id="map" class="map-container"></div>
+            <div class="contact-buttons">
+              <button class="btn btn-primary" id="agendar-visita">
+                <i class="fab fa-whatsapp"></i> Agendar visita
+              </button>
+              <button class="btn btn-outline" id="solicitar-info">
+                <i class="fas fa-info-circle"></i> Solicitar informações
+              </button>
+            </div>
+          </div>
+          <aside class="similar-properties">
+            <h3>Imóveis similares</h3>
+            <div class="card-grid" id="similares-container"></div>
+          </aside>
+        </div>
       </div>
-      <div class="servico-item">
-        <i class="fas fa-calculator"></i>
-        <h3>Financiamento</h3>
-        <p>Simule e realize o sonho da casa própria.</p>
+    </section>
+    <section class="view" id="view-advertise">
+      <div class="container">
+        <h1 class="page-title">Anuncie seu imóvel</h1>
+        <p class="page-subtitle">Preencha o formulário e receba uma avaliação gratuita. Nossa equipe entra em contato em até 24h.</p>
+        <div class="advertise-grid">
+          <div class="benefits">
+            <h2>Por que anunciar conosco?</h2>
+            <div class="benefits-grid">
+              <div class="benefit-card">
+                <i class="fas fa-camera"></i>
+                <h3>Fotos profissionais</h3>
+                <p>Registramos seu imóvel com equipamento de alta qualidade.</p>
+              </div>
+              <div class="benefit-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Divulgação ampla</h3>
+                <p>Redes sociais, portais e nosso site com alto tráfego.</p>
+              </div>
+              <div class="benefit-card">
+                <i class="fas fa-user-check"></i>
+                <h3>Triagem de inquilinos</h3>
+                <p>Análise de crédito e documentação para sua segurança.</p>
+              </div>
+              <div class="benefit-card">
+                <i class="fas fa-file-signature"></i>
+                <h3>Contrato e assessoria</h3>
+                <p>Suporte jurídico em todas as etapas.</p>
+              </div>
+              <div class="benefit-card">
+                <i class="fas fa-hand-holding-usd"></i>
+                <h3>Administração de aluguel</h3>
+                <p>Cuidamos da cobrança e repasses para você.</p>
+              </div>
+              <div class="benefit-card">
+                <i class="fas fa-tachometer-alt"></i>
+                <h3>Agilidade na venda</h3>
+                <p>Imóveis vendidos em até 3 meses no nosso histórico.</p>
+              </div>
+            </div>
+            <div class="trust-badge">
+              <i class="fas fa-shield-alt"></i>
+              <div>
+                <p><strong>CRECI: 12345-F</strong> — Registro no Conselho Regional de Corretores de Imóveis</p>
+                <p>Protegemos seus dados e seguimos as melhores práticas do mercado imobiliário.</p>
+              </div>
+            </div>
+          </div>
+          <div class="form-section">
+            <h2>Preencha os dados</h2>
+            <form id="advertise-form">
+              <div class="form-group">
+                <label>Nome completo</label>
+                <input type="text" id="nome" placeholder="Digite seu nome" required />
+              </div>
+              <div class="form-group">
+                <label>WhatsApp</label>
+                <input type="tel" id="whatsapp" placeholder="(11) 99999-9999" required />
+              </div>
+              <div class="form-group">
+                <label>Tipo do imóvel</label>
+                <select id="tipo-imovel">
+                  <option value="Apartamento">Apartamento</option>
+                  <option value="Casa">Casa</option>
+                  <option value="Terreno">Terreno</option>
+                  <option value="Comercial">Comercial</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Bairro</label>
+                <input type="text" id="bairro-anunciar" placeholder="Ex: Jardim Europa" required />
+              </div>
+              <div class="form-group">
+                <label>Valor esperado (R$)</label>
+                <input type="number" id="valor" placeholder="500.000" required />
+              </div>
+              <div class="form-group">
+                <label>Mensagem (opcional)</label>
+                <textarea id="mensagem" rows="3" placeholder="Conte mais sobre o imóvel..."></textarea>
+              </div>
+              <button type="submit" class="btn" style="width:100%;justify-content:center;">
+                <i class="fab fa-whatsapp"></i> Enviar e receber avaliação gratuita
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <h2 class="section-title">O que nossos clientes dizem</h2>
-    <div class="depoimento-grid">
-      <div class="depoimento-card">
-        <p>"Atendimento excelente, encontrei o apartamento perfeito!"</p>
-        <p class="autor">- Ana Silva</p>
+    </section>
+    <section class="view" id="view-about">
+      <section class="about-hero">
+        <div class="container">
+          <h1 class="about-hero-title">Sobre a Bairro Nobre</h1>
+          <p class="about-hero-subtitle">Há mais de 15 anos transformando sonhos em endereços</p>
+        </div>
+      </section>
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-text">
+            <h2>Nossa história</h2>
+            <p>A Imobiliária Bairro Nobre nasceu do sonho de oferecer um atendimento personalizado e conhecer cada cliente pelo nome. Desde 2009, atuamos no bairro e região com transparência, dedicação e um profundo conhecimento do mercado local.</p>
+            <p>Acreditamos que a confiança é a base de qualquer negócio. Por isso, trabalhamos lado a lado com nossos clientes, desde a primeira visita até a entrega das chaves.</p>
+            <p>Hoje, somos referência em gestão de aluguéis e vendas, com uma carteira de mais de 500 imóveis comercializados e uma taxa de satisfação de 98%.</p>
+          </div>
+          <div class="about-image">
+            <img src="/assets/escritorio.jpeg" alt="Escritório da imobiliária" />
+          </div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number">15+</div>
+            <div class="stat-label">Anos de mercado</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Imóveis comercializados</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">98%</div>
+            <div class="stat-label">Clientes satisfeitos</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">10</div>
+            <div class="stat-label">Especialistas</div>
+          </div>
+        </div>
+        <h2 class="section-title" style="margin-top:1rem;">Nossa equipe</h2>
+        <p class="section-subtitle">Profissionais apaixonados pelo que fazem</p>
+        <div class="team-grid">
+          <div class="team-card">
+            <img src="https://images.unsplash.com/photo-1713947507130-227586ab3024?q=80&w=1332&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="João Mendes" />
+            <h3>João Mendes</h3>
+            <p>Corretor líder</p>
+            <div class="team-social">
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+          <div class="team-card">
+            <img src="https://images.unsplash.com/photo-1506863530036-1efeddceb993?q=80&w=1044&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Maria Santos" />
+            <h3>Maria Santos</h3>
+            <p>Especialista em aluguéis</p>
+            <div class="team-social">
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+          <div class="team-card">
+            <img src="https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Carlos Lima" />
+            <h3>Carlos Lima</h3>
+            <p>Consultor de vendas</p>
+            <div class="team-social">
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+          <div class="team-card">
+            <img src="https://plus.unsplash.com/premium_photo-1723773715903-fed95064c2ef?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Ana Paula" />
+            <h3>Ana Paula</h3>
+            <p>Atendimento</p>
+            <div class="team-social">
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+          </div>
+        </div>
+        <h2 class="section-title">Nossos diferenciais</h2>
+        <p class="section-subtitle">O que nos torna únicos no mercado</p>
+        <div class="differentials-grid">
+          <div class="diff-card">
+            <i class="fas fa-handshake"></i>
+            <h3>Atendimento local</h3>
+            <p>Conhecemos cada rua, cada detalhe do bairro. Isso faz toda a diferença na hora de encontrar o imóvel ideal.</p>
+          </div>
+          <div class="diff-card">
+            <i class="fas fa-bolt"></i>
+            <h3>Visitas rápidas</h3>
+            <p>Agendamento online e flexível. Sua visita em até 24h, sem burocracia.</p>
+          </div>
+          <div class="diff-card">
+            <i class="fas fa-star"></i>
+            <h3>Curadoria de imóveis</h3>
+            <p>Selecionamos apenas os melhores imóveis, com laudos e documentação em dia.</p>
+          </div>
+          <div class="diff-card">
+            <i class="fas fa-gavel"></i>
+            <h3>Suporte jurídico</h3>
+            <p>Assessoria jurídica especializada para garantir segurança em todo o processo.</p>
+          </div>
+        </div>
       </div>
-      <div class="depoimento-card">
-        <p>"Corretores atenciosos e muito conhecimento do bairro."</p>
-        <p class="autor">- Carlos Oliveira</p>
+    </section>
+    <section class="view" id="view-contact">
+      <div class="container">
+        <h1 class="page-title">Fale com a Bairro Nobre</h1>
+        <p class="page-subtitle">Estamos prontos para atender você. Tire dúvidas, agende uma visita ou envie sua mensagem.</p>
+        <div class="contact-grid">
+          <div class="info-col">
+            <h2>Informações de contato</h2>
+            <div class="info-card">
+              <p><i class="fas fa-map-marker-alt"></i> Rua das Flores, 123 – Jardim Europa, São Paulo/SP</p>
+              <p><i class="fas fa-envelope"></i> contato@bairronobre.com.br</p>
+              <p><i class="fas fa-phone-alt"></i> (11) 3333-4444</p>
+              <p><i class="fab fa-whatsapp"></i> (11) 99999-9999</p>
+              <div class="divider"></div>
+              <h3 class="contact-hours-title">Horário de atendimento</h3>
+              <div class="hours">
+                <span class="day">Segunda a sexta:</span><span>9h às 18h</span>
+                <span class="day">Sábado:</span><span>9h às 13h</span>
+                <span class="day">Domingo:</span><span>Fechado</span>
+              </div>
+            </div>
+            <h2>Localização</h2>
+            <div class="map-container">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.2872!2d-46.6558!3d-23.5645!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94ce59b0c0e0b1b1%3A0x8b3f5c8e1b6f5a!2sJardim+Europa%2C+S%C3%A3o+Paulo+-+SP!5e0!3m2!1spt-BR!2sbr!4v1620000000000"
+                width="100%" height="300" style="border:0;" allowfullscreen>
+              </iframe>
+            </div>
+          </div>
+          <div class="form-col">
+            <h2>Envie sua mensagem</h2>
+            <div class="contact-form">
+              <form id="contact-form">
+                <div class="form-group">
+                  <label>Nome completo</label>
+                  <input type="text" id="contact-nome" placeholder="Digite seu nome" required />
+                </div>
+                <div class="form-group">
+                  <label>E-mail</label>
+                  <input type="email" id="contact-email" placeholder="seu@email.com" required />
+                </div>
+                <div class="form-group">
+                  <label>Mensagem</label>
+                  <textarea id="contact-mensagem" rows="4" placeholder="Escreva sua mensagem..." required></textarea>
+                </div>
+                <button type="submit" class="btn" style="width:100%;justify-content:center;">
+                  <i class="fab fa-whatsapp"></i> Enviar via WhatsApp
+                </button>
+              </form>
+            </div>
+            <h2 style="margin-top:1.8rem;">Contato direto</h2>
+            <div class="quick-contact">
+              <a href="https://wa.me/5511999999999" target="_blank" rel="noreferrer">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+              </a>
+              <a href="tel:551133334444"><i class="fas fa-phone"></i> Telefone</a>
+              <a href="mailto:contato@bairronobre.com.br"><i class="fas fa-envelope"></i> E-mail</a>
+            </div>
+            <p class="contact-response-note">
+              <i class="fas fa-clock" style="color:var(--secondary);"></i>
+              Respondemos em até 24 horas úteis.
+            </p>
+          </div>
+        </div>
       </div>
-      <div class="depoimento-card">
-        <p>"Consegui alugar meu imóvel em menos de uma semana."</p>
-        <p class="autor">- Mariana Souza</p>
-      </div>
-    </div>
+    </section>
   </main>
-
-  <section class="cta">
-    <div class="container">
-      <h2>Quer vender ou alugar rápido?</h2>
-      <p>Fale com um especialista agora mesmo.</p>
-      <a href="https://wa.me/5511999999999" class="btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> Chamar no WhatsApp</a>
-    </div>
-  </section>
-
-   <footer>
+  <footer>
     <div class="container">
       <div class="footer-grid">
         <div class="footer-col">
           <h4>Institucional</h4>
           <ul>
-            <li><a href="about.html"><i class="fas fa-chevron-right"></i> Sobre nós</a></li>
+            <li><a href="#/about"><i class="fas fa-chevron-right"></i> Sobre nós</a></li>
             <li><a href="#"><i class="fas fa-chevron-right"></i> CRECI: 12345-F</a></li>
-            <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Trabalhe conosco</a></li>
+            <li><a href="#/contact"><i class="fas fa-chevron-right"></i> Trabalhe conosco</a></li>
             <li><a href="#"><i class="fas fa-chevron-right"></i> Política de privacidade</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>Imóveis</h4>
           <ul>
-            <li><a href="listing.html?type=sale"><i class="fas fa-chevron-right"></i> Comprar</a></li>
-            <li><a href="listing.html?type=rent"><i class="fas fa-chevron-right"></i> Alugar</a></li>
-            <li><a href="listing.html"><i class="fas fa-chevron-right"></i> Lançamentos</a></li>
-            <li><a href="advertise.html"><i class="fas fa-chevron-right"></i> Anuncie seu imóvel</a></li>
+            <li><a href="#/listing?type=sale"><i class="fas fa-chevron-right"></i> Comprar</a></li>
+            <li><a href="#/listing?type=rent"><i class="fas fa-chevron-right"></i> Alugar</a></li>
+            <li><a href="#/listing"><i class="fas fa-chevron-right"></i> Lançamentos</a></li>
+            <li><a href="#/advertise"><i class="fas fa-chevron-right"></i> Anuncie seu imóvel</a></li>
           </ul>
         </div>
         <div class="footer-col footer-contact">
@@ -141,22 +667,28 @@
         <div class="footer-col">
           <h4>Redes Sociais</h4>
           <div class="social-links">
-            <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="#" target="_blank" rel="noreferrer"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" target="_blank" rel="noreferrer"><i class="fab fa-instagram"></i></a>
+            <a href="#" target="_blank" rel="noreferrer"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" target="_blank" rel="noreferrer"><i class="fab fa-youtube"></i></a>
           </div>
-          <p style="margin-top: 1.5rem; color: rgba(255,255,255,0.6);">Siga-nos para novidades</p>
+          <p style="margin-top:1.2rem;color:rgba(255,255,255,0.4);font-size:0.85rem;">Siga-nos para novidades</p>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 Imobiliária Bairro Nobre. Todos os direitos reservados. Desenvolvido com ❤️ pela equipe.</p>
+        <p>&copy; 2026 Imobiliária Bairro Nobre. Todos os direitos reservados.</p>
       </div>
     </div>
   </footer>
-
-  <a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
-
+  <a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank" rel="noreferrer">
+    <i class="fab fa-whatsapp"></i>
+  </a>
   <script src="app.js"></script>
+  <script>
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('site-header');
+      if (header) header.classList.toggle('scrolled', window.scrollY > 20);
+    });
+  </script>
 </body>
 </html>
